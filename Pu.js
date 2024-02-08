@@ -11,9 +11,6 @@ if (body){
                 if (data && data.content) {
                     // 去除“PU金豆”
                     if (data.content.grade) {
-                        data.content.grade = data.content.grade.filter(grade => {
-                            return grade.code !== "my_pu_amount";
-                        });
                         // 修改活动总积分
                         data.content.grade.forEach(item => {
                             if (item.code === "credit") {
@@ -22,9 +19,10 @@ if (body){
                         });
                     }
                     // 去除“成长站”,“PU商城”,“校园生活”
-                    if (data.content.floor) {
+                    if (data && data.content && data.content.floor) {
                         data.content.floor = data.content.floor.filter(floor => {
-                            return floor.id !== "8" && floor.id !== "9";
+                            return floor.id !== "8" && floor.id !== "9" &&
+                                !(floor.list && floor.list.some(item => item.code === "balance"));
                         });
                     }
                     body = JSON.stringify(data);
@@ -46,7 +44,7 @@ if (body){
                     body = JSON.stringify(data);
                 }
             } catch (error) {
-                console.error("Error parsing JSON:", error);
+                console.error("Error parsing JSON", error);
             }
             break;
         /**
@@ -64,9 +62,6 @@ if (body){
                     delete data.content.banner2;
                     delete data.content.articles;
                     delete data.content.entry2;
-                    // 删除 entry1 中的特定对象
-                    data.content.entry1 = data.content.entry1.filter(entry => entry.code !== "EventCalendar" && entry.code !== "more");
-                    // 修改完成后将数据转换回字符串
                     body = JSON.stringify(data);
                 }
             } catch (error) {
