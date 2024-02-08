@@ -21,9 +21,14 @@ if (body){
                     // 去除“成长站”,“PU商城”,“校园生活”
                     if (data && data.content && data.content.floor) {
                         data.content.floor = data.content.floor.filter(floor => {
-                            return floor.id !== "8" && floor.id !== "9" &&
-                                !(floor.list && floor.list.some(item => item.code === "balance"));
+                            return floor.id !== "8" && floor.id !== "9";
                         });
+                        let floor7 = data.content.floor.find(floor => floor.id === "7");
+                        if (floor7 && floor7.list) {
+                            floor7.list = floor7.list.filter(item => item.code !== "balance");
+                        }
+                        // 修改完成后将数据转换回字符串
+                        body = JSON.stringify(data);
                     }
                     body = JSON.stringify(data);
                 }
